@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Anonium 21</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg0:#050506;
+      --bg1:#0b0b0f;
+      --ink:#e8dcc2;
+      --muted:#b9ad96;
+      --gold1:#f2d28a;
+      --gold2:#b9923d;
+      --gold3:#6a4f1a;
+
+      --panel: rgba(18,18,22,.62);
+      --panel2: rgba(10,10,14,.72);
+
+      --shadow: 0 18px 55px rgba(0,0,0,.62);
+      --soft: 0 12px 25px rgba(0,0,0,.45);
+
+      --radius: 22px;
+      --frameRadius: 26px;
+
+      --gridGap: 26px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color: var(--ink);
+      background:
+        radial-gradient(1400px 900px at 30% 15%, rgba(242,210,138,.08), transparent 60%),
+        radial-gradient(900px 600px at 80% 70%, rgba(242,210,138,.06), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 55%, #07070a);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x:hidden;
+    }
+
+    .outerBorder {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .95;
+      z-index: 1;
+    }
+    .outerBorder img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 20px rgba(242,210,138,.18));
+    }
+
+    .binaryGutter{
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(220px, 18vw);
+      height: 100%;
+      opacity: .22;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.55) 30%, rgba(0,0,0,.45)),
+        repeating-linear-gradient(0deg, rgba(242,210,138,.09) 0 1px, transparent 1px 48px);
+    }
+    .binaryGutter::before{
+      content:"0101010010100110100101010010010100101010010110010101010010100101010010 01101001 010101 00100101 0101 0010 0101 1010 0101 0010 0101 0010 0101 0010 0101 0110 0101 0010 0101 0010";
+      position:absolute;
+      inset: 12px 14px 12px 14px;
+      color: rgba(242,210,138,.65);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.95;
+      letter-spacing: .22em;
+      white-space: pre-wrap;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      filter: blur(.15px);
+      opacity: .55;
+    }
+
+    .wrap{
+      position: relative;
+      z-index: 2;
+      max-width: 1220px;
+      padding: 44px 26px 80px;
+      margin: 0 auto;
+    }
+
+    .marquee{
+      position: relative;
+      padding: 34px 28px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(18,18,22,.55), rgba(12,12,16,.7));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .marquee::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(700px 140px at 50% 55%, rgba(242,210,138,.22), transparent 65%),
+        repeating-linear-gradient(90deg, rgba(242,210,138,.10) 0 1px, transparent 1px 48px);
+      opacity:.25;
+      pointer-events:none;
+    }
+
+    .marquee::after{
+      content:"";
+      position:absolute;
+      inset: 14px;
+      border-radius: 22px;
+      border: 1px solid rgba(242,210,138,.22);
+      box-shadow:
+        inset 0 0 0 1px rgba(242,210,138,.08),
+        0 0 0 1px rgba(0,0,0,.45);
+      pointer-events:none;
+    }
+
+    .kicker{
+      text-align:center;
+      letter-spacing:.36em;
+      font-size: 12px;
+      color: rgba(242,210,138,.75);
+      margin: 0 0 14px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .title{
+      text-align:center;
+      font-family: Cinzel, serif;
+      letter-spacing: .18em;
+      font-size: clamp(34px, 4vw, 58px);
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      text-transform: uppercase;
+      color: #f6ead2;
+      text-shadow:
+        0 0 8px rgba(242,210,138,.35),
+        0 0 22px rgba(242,210,138,.18),
+        -2px 0 rgba(255,60,60,.10),
+        2px 0 rgba(0,210,255,.10);
+    }
+
+    .subtitle{
+      text-align:center;
+      font-family: Cinzel, serif;
+      letter-spacing: .14em;
+      font-size: 13px;
+      color: rgba(242,210,138,.78);
+      margin: 12px 0 0;
+      position: relative;
+      z-index: 1;
+      text-transform: uppercase;
+    }
+
+    .helper{
+      margin-top: 20px;
+      text-align:center;
+      color: rgba(232,220,194,.75);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wall{
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--gridGap);
+      align-items: start;
+    }
+
+    @media (max-width: 980px){
+      .wall{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px){
+      .wall{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      position: relative;
+      border-radius: var(--frameRadius);
+      padding: 14px 14px 12px;
+      background:
+        radial-gradient(420px 300px at 50% 0%, rgba(242,210,138,.08), transparent 60%),
+        linear-gradient(180deg, rgba(26,26,32,.72), rgba(10,10,14,.82));
+      box-shadow: var(--soft);
+      border: 1px solid rgba(242,210,138,.12);
+      overflow: hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset: 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(242,210,138,.14);
+      box-shadow:
+        inset 0 0 0 1px rgba(242,210,138,.06),
+        inset 0 0 0 8px rgba(0,0,0,.28);
+      pointer-events:none;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      left: 14px; right: 14px;
+      top: 14px; bottom: 56px;
+      border-radius: 18px;
+      box-shadow:
+        inset 0 0 0 1px rgba(242,210,138,.08),
+        inset 0 0 0 10px rgba(0,0,0,.22);
+      pointer-events:none;
+    }
+
+    .posterLink{
+      display:block;
+      position: relative;
+      z-index: 1;
+      border-radius: 16px;
+      overflow: hidden;
+      text-decoration:none;
+      background: rgba(0,0,0,.18);
+    }
+
+    .posterImg{
+      display:block;
+      width:100%;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      transform: translateZ(0);
+      filter: saturate(1.02) contrast(1.03);
+      transition: transform .35s ease, filter .35s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card:hover .posterImg{
+      transform: scale(1.02);
+      filter: saturate(1.05) contrast(1.06);
+    }
+
+    /* ✅ Poster overlay frame */
+    .frameOverlay{
+      position:absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events:none;
+      opacity: .62;
+      mix-blend-mode: screen;
+      filter:
+        drop-shadow(0 0 10px rgba(242,210,138,.18))
+        drop-shadow(0 14px 22px rgba(0,0,0,.45));
+    }
+    .frameOverlay img{
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      border-radius: 16px;
+      display:block;
+      transform: scale(1.36);
+      transform-origin: center;
+    }
+
+    .label{
+      position: relative;
+      z-index: 1;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      text-align:center;
+      font-family: Cinzel, serif;
+      letter-spacing: .14em;
+      font-size: 12px;
+      color: rgba(232,220,194,.9);
+      text-transform: uppercase;
+      background:
+        linear-gradient(180deg, rgba(16,16,20,.78), rgba(8,8,12,.86));
+      border: 1px solid rgba(242,210,138,.14);
+      box-shadow:
+        inset 0 0 0 1px rgba(242,210,138,.06);
+    }
+
+    /* ===== HORIZONTAL FEATURE STRIP (TOP, UNDER TITLE) ===== */
+    .topFeature{
+      position: relative;
+      margin-top: 26px;
+      border-radius: 30px;
+      padding: 18px;
+      background:
+        radial-gradient(900px 260px at 20% 10%, rgba(242,210,138,.14), transparent 58%),
+        linear-gradient(180deg, rgba(26,26,32,.62), rgba(10,10,14,.86));
+      border: 1px solid rgba(242,210,138,.20);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .topFeature::before{
+      content:"";
+      position:absolute;
+      inset: 14px;
+      border-radius: 24px;
+      border: 1px solid rgba(242,210,138,.22);
+      box-shadow:
+        inset 0 0 0 1px rgba(242,210,138,.08),
+        inset 0 0 0 10px rgba(0,0,0,.24);
+      pointer-events:none;
+    }
+
+    .topFeature::after{
+      content:"";
+      position:absolute;
+      inset: 26px;
+      border-radius: 20px;
+      border: 1px solid rgba(242,210,138,.14);
+      box-shadow: inset 0 0 0 1px rgba(242,210,138,.06);
+      pointer-events:none;
+      opacity:.95;
+    }
+
+    .topFeatureOverlay{
+      position:absolute;
+      inset: 0;
+      pointer-events:none;
+      opacity: .30;
+      z-index: 2;
+      mix-blend-mode: screen;
+    }
+    .topFeatureOverlay img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      transform: scale(1.08);
+      transform-origin:center;
+      filter: drop-shadow(0 0 20px rgba(242,210,138,.18));
+    }
+
+    .topFeatureThumb{
+      position: relative;
+      z-index:3;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(242,210,138,.20);
+      box-shadow: 0 14px 35px rgba(0,0,0,.55);
+      background: rgba(0,0,0,.35);
+    }
+    .topFeatureThumb img{
+      width:100%;
+      height:auto;
+      display:block;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+    }
+
+    .topFeatureBody{
+      position: relative;
+      z-index:3;
+      padding: 6px 8px;
+    }
+
+    .featureKicker{
+      font-family: Cinzel, serif;
+      letter-spacing: .38em;
+      font-size: 12px;
+      color: rgba(242,210,138,.75);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .featureTitle{
+      font-family: Cinzel, serif;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-size: clamp(30px, 3vw, 46px);
+      margin: 0;
+      color: #f6ead2;
+      text-shadow:
+        0 0 14px rgba(242,210,138,.3),
+        -2px 0 rgba(255,60,60,.15),
+        2px 0 rgba(0,210,255,.15);
+    }
+
+    .featureDivider{
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, rgba(242,210,138,.6), transparent);
+      margin: 18px 0 20px;
+      opacity: .7;
+    }
+
+    .featureDesc{
+      color: rgba(232,220,194,.82);
+      line-height: 1.65;
+      max-width: 720px;
+      margin: 0 0 26px;
+      font-size: 14px;
+    }
+
+    .featureActions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn{
+      appearance:none;
+      border: 1px solid rgba(242,210,138,.22);
+      background: rgba(10,10,14,.72);
+      color: rgba(246,234,210,.92);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-family: Cinzel, serif;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      box-shadow: inset 0 0 0 1px rgba(242,210,138,.06);
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      position: relative;
+      z-index: 3;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(242,210,138,.36);
+      background: rgba(14,14,18,.76);
+    }
+
+    @media (max-width: 980px){
+      .topFeature{ grid-template-columns: 1fr; }
+      .topFeatureThumb{ max-width: 360px; }
+    }
+
+    /* Intro overlay */
+    .introOverlay{
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(900px 600px at 50% 40%, rgba(242,210,138,.12), transparent 60%),
+        rgba(0,0,0,.84);
+      z-index: 50;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 22px;
+    }
+    .introFrame{
+      position: relative;
+      width: min(980px, 92vw);
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(242,210,138,.22);
+      box-shadow: 0 24px 90px rgba(0,0,0,.75);
+      background: rgba(0,0,0,.35);
+    }
+    .introFrame img{
+      display:block;
+      width: 100%;
+      height: auto;
+    }
+    .introHint{
+      position:absolute;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      text-align:center;
+      color: rgba(232,220,194,.78);
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-family: Cinzel, serif;
+      text-shadow: 0 10px 35px rgba(0,0,0,.75);
+      pointer-events:none;
+    }
+
+    /* Video modal */
+    .modal{
+      position: fixed;
+      inset:0;
+      z-index: 60;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 22px;
+      background: rgba(0,0,0,.78);
+    }
+    .modal.open{ display:flex; }
+
+    .modalCard{
+      width: min(980px, 94vw);
+      border-radius: 22px;
+      overflow:hidden;
+      background: rgba(10,10,14,.90);
+      border: 1px solid rgba(242,210,138,.22);
+      box-shadow: 0 26px 90px rgba(0,0,0,.8);
+      position: relative;
+    }
+
+    .modalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(242,210,138,.12);
+    }
+    .modalTop .modalTitle{
+      font-family: Cinzel, serif;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-size: 13px;
+      color: rgba(242,210,138,.85);
+      margin:0;
+    }
+    .closeBtn{
+      border: 1px solid rgba(242,210,138,.22);
+      background: rgba(0,0,0,.35);
+      color: rgba(246,234,210,.9);
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+      font-family: Cinzel, serif;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .videoWrap{
+      padding: 18px;
+      display:flex;
+      justify-content:center;
+    }
+    .videoWrap video{
+      width: 75%;
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(242,210,138,.18);
+      box-shadow: 0 16px 55px rgba(0,0,0,.6);
+      background: #000;
+    }
+    @media (max-width: 720px){
+      .videoWrap video{ width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outerBorder" aria-hidden="true">
+    <img src="assets/border.svg" alt="">
+  </div>
+  <div class="binaryGutter" aria-hidden="true"></div>
+
+  <div class="introOverlay" id="introOverlay">
+    <div class="introFrame">
+      <img src="assets/intro.gif" alt="The Anonium 21 intro">
+      <div class="introHint">Click to enter</div>
+    </div>
+  </div>
+
+  <div class="modal" id="trailerModal" role="dialog" aria-modal="true" aria-label="Return of Satoshi teaser">
+    <div class="modalCard">
+      <div class="modalTop">
+        <p class="modalTitle">Return of Satoshi • Teaser</p>
+        <button class="closeBtn" id="closeTrailer">Close</button>
+      </div>
+      <div class="videoWrap">
+        <video id="trailerVideo" controls preload="metadata">
+          <source src="assets/returnofsatoshi.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <header class="marquee">
+      <div class="kicker">Macintoshi Presents</div>
+      <h1 class="title">The Anonium 21</h1>
+      <div class="subtitle">An anonymous picture house for impossible reels and permanent artifacts</div>
+      <div class="helper">Enter the Mind behind Anonymous Art on Bitcoin.</div>
+    </header>
+
+    <!-- ✅ NEW: TOP FEATURE STRIP (below title, above posters) -->
+    <section class="topFeature" aria-label="Coming soon">
+      <div class="topFeatureOverlay" aria-hidden="true">
+        <img src="assets/border.svg" alt="">
+      </div>
+
+      <div class="topFeatureThumb">
+        <img src="assets/posters/ReturnOfSatoshi.png" alt="Return of Satoshi">
+      </div>
+
+      <div class="topFeatureBody">
+        <div class="featureKicker">COMING SOON</div>
+        <h2 class="featureTitle">Return of Satoshi</h2>
+        <div class="featureDivider"></div>
+
+        <p class="featureDesc">
+          Can Bitcoin remain sovereign while being financialized? Can Power return to the people if they voluntarily surrender custody? Does corruption come from protocol or behavior?
+          <br><br>
+          
+        </p>
+
+        <div class="featureActions">
+          <button class="btn" id="openTrailerBtn" type="button">★ WATCH TEASER</button>
+          <a class="btn" href="https://ordinals.com/inscription/ad203b1c3e140332636a1cf969762638a3bdb57943c12a1598020535b3d5cb13i0" target="_blank" rel="noopener noreferrer">VIEW INSCRIPTION</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="wall" id="wall"></section>
+  </main>
+
+  <script>
+    const posters = [
+      { title: "Return of Satoshi", file: "ReturnOfSatoshi.png", inscription: "https://ordinals.com/inscription/ad203b1c3e140332636a1cf969762638a3bdb57943c12a1598020535b3d5cb13i0" },
+      { title: "Battle of Mt Gox", file: "BattleofMtGOX.png", inscription: "https://ordinals.com/inscription/b1a8cb56ba145963e1125f54c7c302c40926eb96ef045323769607f3ad407582i0" },
+      { title: "Block War", file: "BlockWar.png", inscription: "https://ordinals.com/inscription/e1cf79fea2143e2624762953098ba97055da0b0ea39075cab0327784b5879000i0" },
+      { title: "Creator", file: "Creator.png", inscription: "https://ordinals.com/inscription/20b4a113450b674d5677cbd572770443a9ec5dba2c3e501096d5a5f25d523cfei0" },
+      { title: "CTRL Z", file: "CTRLZ.png", inscription: "https://ordinals.com/inscription/2b54d1c3403fc23b5902c0fa82d6ffef31f950a5a106be30e76dc03d5b3f7630i0" },
+      { title: "Deep HODL", file: "DeepHODL.png", inscription: "https://ordinals.com/inscription/e41527233b1e837f34005c479ed0d7ad0f5c53e8e0688307c2468adcbc5ec5cai0" },
+      { title: "Environmental Menace", file: "EnvironmentalMenace.png", inscription: "https://ordinals.com/inscription/6c1cf51c5100cfae1496fe58ec301de25fe8e431eb22144f1ded3e49910ea00ci0" },
+      { title: "The Fall of Faketoshi", file: "FallofFaketoshi.png", inscription: "https://ordinals.com/inscription/df8a1397ed267b66ef5a4bf10472059b16d6b16e973b8bca6842bb21c13ef969i0" },
+      { title: "The Forbidden Mint", file: "ForbiddenMint.png", inscription: "https://ordinals.com/inscription/494379f89b907ccbea4c60c7cf55c3c16a7c75d877a51edd4c59751b2fed04eai0" },
+      { title: "The Ghost of Genesis", file: "GhostofGenesis.png", inscription: "https://ordinals.com/inscription/97f813ad090a539edcea4d95a6b6c8798a8e0b132af79feedb6a7fa768f817f4i0" },
+      { title: "Memepool", file: "Memepool.png", inscription: "https://ordinals.com/inscription/50499345113c967e77da2bfd0cb2e5bc61cbc3dfc33d940a75a0677aeb922f8di0" },
+      { title: "Miners of Menace", file: "MinersofMenace.png", inscription: "https://ordinals.com/inscription/1c1f6133f63bb270c0e4aaea4bbeba8b3918b80442731a5242e3f44e14aa5c84i0" },
+      { title: "Node Runner", file: "NodeRunner.png", inscription: "https://ordinals.com/inscription/e1dcc89dd949eb982266c0e154a0809e5e7ea81299fd13effa6cc050b14dd91ai0" },
+      { title: "RARE", file: "RARE.png", inscription: "https://ordinals.com/inscription/4a0fae362410d3e89a88f82234b21df64e0b6295e7c5e6c6eb3393485944ff3ci0" },
+      { title: "Silk", file: "SILK.png", inscription: "https://ordinals.com/inscription/a7b8a7623e204673a51af9b037e50f5985ebd25154f9f636c844365bb2dedcc9i0" },
+      { title: "Spooked", file: "Spooked.png", inscription: "https://ordinals.com/inscription/2d4db7606d1ffab1362f53c60b047f167c1c3dbe6e55ff4d67ac000104f47161i0" },
+      { title: "The Apostate", file: "TheApostate.png", inscription: "https://ordinals.com/inscription/8c1bd6632668aea120b3978bc30b06f663cd84a920750c3dc9e7e75492d03f5ci0" },
+      { title: "The Bituary", file: "TheBituary.png", inscription: "https://ordinals.com/inscription/8d4cbfd76566f3252108ca5ad1639e036d0dd70deda74a7716396fa313e03438i0" },
+      { title: "The Hal Protocol", file: "TheHalProtocol.png", inscription: "https://ordinals.com/inscription/ed1942e2d5ee9014e9177cebf1300f1254f2c285e2597cf52cff3fae0eb2ccadi0" },
+      { title: "The Satoshi Delivery", file: "theSatoshiDelivery.png", inscription: "https://ordinals.com/inscription/32bde153898dab83920f7cef0e20e686c335b77f10a66d44de51f985c90a9ab6i0" },
+      { title: "The Taproot Experiment", file: "TheTaprootExperiment.png", inscription: "https://ordinals.com/inscription/3374f63fa731b13670d8a875ca52215171525d7875d31a51e1bf288629ef9412i0" },
+    ];
+
+    const wall = document.getElementById("wall");
+
+    function makePosterCard(p){
+      const card = document.createElement("article");
+      card.className = "card";
+
+      const a = document.createElement("a");
+      a.className = "posterLink";
+      a.href = (p.inscription && p.inscription !== "#") ? p.inscription : "javascript:void(0)";
+      if (p.inscription && p.inscription !== "#") {
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+      }
+
+      const img = document.createElement("img");
+      img.className = "posterImg";
+      img.loading = "lazy";
+      img.src = `assets/posters/${p.file}`;
+      img.alt = p.title;
+
+      const overlay = document.createElement("span");
+      overlay.className = "frameOverlay";
+      overlay.innerHTML = `<img src="assets/border.svg" alt="">`;
+
+      a.appendChild(img);
+      a.appendChild(overlay);
+
+      const label = document.createElement("div");
+      label.className = "label";
+      label.textContent = p.title;
+
+      card.appendChild(a);
+      card.appendChild(label);
+      return card;
+    }
+
+    posters.forEach(p => {
+      const card = makePosterCard(p);
+      wall.appendChild(card);
+    });
+
+    // Intro overlay logic
+    const introOverlay = document.getElementById("introOverlay");
+    let introClosed = false;
+    function closeIntro(){
+      if (introClosed) return;
+      introClosed = true;
+      introOverlay.style.display = "none";
+    }
+    introOverlay.addEventListener("click", closeIntro);
+    setTimeout(closeIntro, 2600);
+
+    // Trailer modal
+    const trailerModal = document.getElementById("trailerModal");
+    const trailerVideo = document.getElementById("trailerVideo");
+    const closeTrailer = document.getElementById("closeTrailer");
+
+    function openTrailer(){
+      trailerModal.classList.add("open");
+      try { trailerVideo.currentTime = 0; } catch(e){}
+      trailerVideo.play().catch(()=>{});
+    }
+    function closeTrailerModal(){
+      trailerModal.classList.remove("open");
+      trailerVideo.pause();
+    }
+
+    document.addEventListener("click", (e) => {
+      if (e.target && e.target.id === "openTrailerBtn") openTrailer();
+    });
+    closeTrailer.addEventListener("click", closeTrailerModal);
+    trailerModal.addEventListener("click", (e) => {
+      if (e.target === trailerModal) closeTrailerModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeTrailerModal();
+    });
+  </script>
+</body>
+</html>

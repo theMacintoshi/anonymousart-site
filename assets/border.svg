@@ -1,0 +1,125 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="3200" viewBox="0 0 2400 3200">
+  <defs>
+    <linearGradient id="goldStroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6e2aa" stop-opacity="0.95"></stop>
+      <stop offset="0.52" stop-color="#d6b35f" stop-opacity="0.85"></stop>
+      <stop offset="1" stop-color="#f6e2aa" stop-opacity="0.95"></stop>
+    </linearGradient>
+
+    <linearGradient id="goldStroke2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0d28a" stop-opacity="0.70"></stop>
+      <stop offset="1" stop-color="#b8903f" stop-opacity="0.55"></stop>
+    </linearGradient>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.6" result="b"></feGaussianBlur>
+      <feColorMatrix in="b" type="matrix" values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 0.65 0" result="g"></feColorMatrix>
+      <feMerge>
+        <feMergeNode in="g"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+
+    <!-- Binary pattern -->
+    <pattern id="binaryRail" width="220" height="64" patternUnits="userSpaceOnUse">
+      <rect width="220" height="64" fill="transparent"></rect>
+      <text x="0" y="22" font-family="ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="18" fill="#f0d28a" fill-opacity="0.22" letter-spacing="2">010010010101101001001001</text>
+      <text x="0" y="50" font-family="ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="18" fill="#d6b35f" fill-opacity="0.17" letter-spacing="2">101100101010010110110010</text>
+    </pattern>
+
+    <!-- Keep binary only in the outer & inner frame bands -->
+    <mask id="frameMask">
+      <rect x="0" y="0" width="2400" height="3200" fill="black"></rect>
+      <!-- Outer band -->
+      <rect x="70" y="70" width="2260" height="3060" rx="92" fill="white"></rect>
+      <rect x="220" y="220" width="1960" height="2760" rx="72" fill="black"></rect>
+      <!-- Inner band -->
+      <rect x="270" y="270" width="1860" height="2660" rx="66" fill="white"></rect>
+      <rect x="360" y="360" width="1680" height="2480" rx="56" fill="black"></rect>
+    </mask>
+
+    <!-- Sunburst rays pattern -->
+    <pattern id="rays" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <path d="M0 20 H40" stroke="#f0d28a" stroke-opacity="0.20" stroke-width="3"></path>
+      <path d="M0 0 H40" stroke="#d6b35f" stroke-opacity="0.10" stroke-width="3"></path>
+    </pattern>
+  </defs>
+
+  <!-- Binary rails (masked to border bands) -->
+  <rect x="0" y="0" width="2400" height="3200" fill="url(#binaryRail)" mask="url(#frameMask)"></rect>
+
+  <!-- Subtle rays inside the outer band -->
+  <rect x="70" y="70" width="2260" height="3060" rx="92" fill="url(#rays)" opacity="0.20"></rect>
+  <rect x="220" y="220" width="1960" height="2760" rx="72" fill="#000" opacity="0.40"></rect>
+
+  <!-- Outer strokes -->
+  <g filter="url(#softGlow)">
+    <rect x="70" y="70" width="2260" height="3060" rx="92" fill="none" stroke="url(#goldStroke)" stroke-width="7"></rect>
+    <rect x="110" y="110" width="2180" height="2980" rx="86" fill="none" stroke="#f0d28a" stroke-opacity="0.33" stroke-width="3"></rect>
+    <rect x="150" y="150" width="2100" height="2900" rx="80" fill="none" stroke="#d6b35f" stroke-opacity="0.22" stroke-width="2"></rect>
+    <rect x="190" y="190" width="2020" height="2820" rx="76" fill="none" stroke="url(#goldStroke2)" stroke-opacity="0.26" stroke-width="2"></rect>
+  </g>
+
+  <!-- Inner strokes (closer to art opening) -->
+  <g filter="url(#softGlow)">
+    <rect x="270" y="270" width="1860" height="2660" rx="66" fill="none" stroke="url(#goldStroke)" stroke-width="6"></rect>
+    <rect x="310" y="310" width="1780" height="2580" rx="60" fill="none" stroke="#f0d28a" stroke-opacity="0.28" stroke-width="3"></rect>
+    <rect x="350" y="350" width="1700" height="2500" rx="56" fill="none" stroke="#d6b35f" stroke-opacity="0.18" stroke-width="2"></rect>
+  </g>
+
+  <!-- Corner ladder geometry -->
+  <g filter="url(#softGlow)" stroke="#f0d28a" stroke-opacity="0.55" stroke-width="3">
+    <!-- TL -->
+    <path d="M260 420 L420 260"></path>
+    <path d="M260 360 L360 260"></path>
+    <path d="M320 420 L420 320"></path>
+    <path d="M300 300 H430"></path>
+    <path d="M300 300 V430"></path>
+    <!-- TR -->
+    <path d="M2140 420 L1980 260"></path>
+    <path d="M2140 360 L2040 260"></path>
+    <path d="M2080 420 L1980 320"></path>
+    <path d="M2100 300 H1970"></path>
+    <path d="M2100 300 V430"></path>
+    <!-- BL -->
+    <path d="M260 2780 L420 2940"></path>
+    <path d="M260 2840 L360 2940"></path>
+    <path d="M320 2780 L420 2880"></path>
+    <path d="M300 2900 H430"></path>
+    <path d="M300 2900 V2770"></path>
+    <!-- BR -->
+    <path d="M2140 2780 L1980 2940"></path>
+    <path d="M2140 2840 L2040 2940"></path>
+    <path d="M2080 2780 L1980 2880"></path>
+    <path d="M2100 2900 H1970"></path>
+    <path d="M2100 2900 V2770"></path>
+  </g>
+
+  <!-- Top crown / sunburst -->
+  <g filter="url(#softGlow)" opacity="0.9">
+    <path d="M860 210 H1540" stroke="#f0d28a" stroke-opacity="0.45" stroke-width="4"></path>
+    <path d="M980 210 L1200 140 L1420 210" fill="none" stroke="#d6b35f" stroke-opacity="0.35" stroke-width="4"></path>
+    <!-- rays -->
+    <path d="M1200 140 L1200 96" stroke="#f0d28a" stroke-opacity="0.34" stroke-width="4"></path>
+    <path d="M1160 146 L1142 108" stroke="#f0d28a" stroke-opacity="0.28" stroke-width="4"></path>
+    <path d="M1240 146 L1258 108" stroke="#f0d28a" stroke-opacity="0.28" stroke-width="4"></path>
+    <path d="M1120 160 L1088 128" stroke="#f0d28a" stroke-opacity="0.20" stroke-width="4"></path>
+    <path d="M1280 160 L1312 128" stroke="#f0d28a" stroke-opacity="0.20" stroke-width="4"></path>
+  </g>
+
+  <!-- Bottom crown / sunburst -->
+  <g filter="url(#softGlow)" opacity="0.9">
+    <path d="M860 2990 H1540" stroke="#f0d28a" stroke-opacity="0.45" stroke-width="4"></path>
+    <path d="M980 2990 L1200 3060 L1420 2990" fill="none" stroke="#d6b35f" stroke-opacity="0.35" stroke-width="4"></path>
+    <!-- rays -->
+    <path d="M1200 3060 L1200 3104" stroke="#f0d28a" stroke-opacity="0.34" stroke-width="4"></path>
+    <path d="M1160 3054 L1142 3092" stroke="#f0d28a" stroke-opacity="0.28" stroke-width="4"></path>
+    <path d="M1240 3054 L1258 3092" stroke="#f0d28a" stroke-opacity="0.28" stroke-width="4"></path>
+    <path d="M1120 3040 L1088 3072" stroke="#f0d28a" stroke-opacity="0.20" stroke-width="4"></path>
+    <path d="M1280 3040 L1312 3072" stroke="#f0d28a" stroke-opacity="0.20" stroke-width="4"></path>
+  </g>
+</svg>
