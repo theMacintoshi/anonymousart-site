@@ -650,6 +650,89 @@
       z-index: 1;
     }
 
+    /* Password gate modal */
+    .passwordModal{
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(0,0,0,.82);
+    }
+    .passwordModal.open{
+      display:flex;
+    }
+
+    .passwordCard{
+      width: min(460px, 92vw);
+      border-radius: 22px;
+      overflow: hidden;
+      background: rgba(10,10,14,.96);
+      border: 1px solid rgba(242,210,138,.22);
+      box-shadow: 0 26px 90px rgba(0,0,0,.8);
+      position: relative;
+    }
+
+    .passwordTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(242,210,138,.12);
+    }
+
+    .passwordTop .passwordTitle{
+      font-family: Cinzel, serif;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-size: 13px;
+      color: rgba(242,210,138,.85);
+      margin:0;
+    }
+
+    .passwordBody{
+      padding: 20px 18px 22px;
+    }
+
+    .passwordText{
+      margin: 0 0 14px;
+      color: rgba(232,220,194,.82);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .passwordInput{
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(242,210,138,.18);
+      background: rgba(0,0,0,.28);
+      color: rgba(246,234,210,.94);
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .passwordInput:focus{
+      border-color: rgba(242,210,138,.34);
+      box-shadow: 0 0 0 1px rgba(242,210,138,.14);
+    }
+
+    .passwordActions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .passwordError{
+      min-height: 18px;
+      margin: 10px 0 0;
+      color: #ff8c8c;
+      font-size: 13px;
+    }
+
     @media (max-width: 1100px){
       .statusBar{
         justify-content: flex-start;
@@ -672,6 +755,7 @@
 
     @media (max-width: 720px){
       .countdownGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .videoWrap video{ width: 100%; }
     }
 
     @media (max-width: 640px){
@@ -798,9 +882,6 @@
       box-shadow: 0 16px 55px rgba(0,0,0,.6);
       background: #000;
     }
-    @media (max-width: 720px){
-      .videoWrap video{ width: 100%; }
-    }
   </style>
 </head>
 
@@ -817,17 +898,47 @@
     </div>
   </div>
 
-  <div class="modal" id="trailerModal" role="dialog" aria-modal="true" aria-label="Node Runner teaser">
+  <!-- Final film modal -->
+  <div class="modal" id="filmModal" role="dialog" aria-modal="true" aria-label="Node Runner collector screening">
     <div class="modalCard">
       <div class="modalTop">
-        <p class="modalTitle">Node Runner • Teaser</p>
-        <button class="closeBtn" id="closeTrailer">Close</button>
+        <p class="modalTitle">Node Runner • Collector Screening</p>
+        <button class="closeBtn" id="closeFilm">Close</button>
       </div>
       <div class="videoWrap">
-        <video id="trailerVideo" controls preload="metadata">
-          <source src="assets/NodeRunnerTeaser.mp4" type="video/mp4">
+        <video id="filmVideo" controls preload="metadata">
+          <source src="assets/NodeRunnerFinal.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password gate -->
+  <div class="passwordModal" id="passwordModal" role="dialog" aria-modal="true" aria-label="Node Runner early access">
+    <div class="passwordCard">
+      <div class="passwordTop">
+        <p class="passwordTitle">Node Runner • Early Access</p>
+        <button class="closeBtn" id="closePasswordModal">Close</button>
+      </div>
+      <div class="passwordBody">
+        <p class="passwordText">
+          Enter the collector access password to unlock the Node Runner screening.
+        </p>
+
+        <input
+          type="password"
+          id="earlyAccessPassword"
+          class="passwordInput"
+          placeholder="Enter password"
+          autocomplete="off"
+        />
+
+        <div class="passwordActions">
+          <button class="btn" id="submitEarlyAccess" type="button">Unlock Screening</button>
+        </div>
+
+        <div class="passwordError" id="passwordError"></div>
       </div>
     </div>
   </div>
@@ -894,10 +1005,10 @@
         </div>
 
         <div class="featureActions">
-          <button class="btn" id="openTrailerBtn" type="button">★ Watch Teaser</button>
+          <button class="btn" id="openEarlyAccessBtn" type="button">★ Early Access</button>
           <a class="btn" href="https://ordinals.com/inscription/e1dcc89dd949eb982266c0e154a0809e5e7ea81299fd13effa6cc050b14dd91ai0" target="_blank" rel="noopener noreferrer">View Inscription</a>
           <a class="btn" href="archive.html#registry">View Registry</a>
-          <a class="btn" href="archive.html#collector-access">Collector Access</a>
+          <button class="btn" id="openCollectorAccessBtn" type="button">Collector Access</button>
         </div>
       </div>
     </section>
@@ -1017,29 +1128,87 @@
     introOverlay.addEventListener("click", closeIntro);
     setTimeout(closeIntro, 2600);
 
-    const trailerModal = document.getElementById("trailerModal");
-    const trailerVideo = document.getElementById("trailerVideo");
-    const closeTrailer = document.getElementById("closeTrailer");
+    // Film modal
+    const filmModal = document.getElementById("filmModal");
+    const filmVideo = document.getElementById("filmVideo");
+    const closeFilm = document.getElementById("closeFilm");
 
-    function openTrailer(){
-      trailerModal.classList.add("open");
-      try { trailerVideo.currentTime = 0; } catch(e){}
-      trailerVideo.play().catch(()=>{});
+    function openFilm(){
+      filmModal.classList.add("open");
+      try { filmVideo.currentTime = 0; } catch(e){}
+      filmVideo.play().catch(()=>{});
     }
-    function closeTrailerModal(){
-      trailerModal.classList.remove("open");
-      trailerVideo.pause();
+    function closeFilmModal(){
+      filmModal.classList.remove("open");
+      filmVideo.pause();
+    }
+
+    // Password modal
+    const passwordModal = document.getElementById("passwordModal");
+    const closePasswordModal = document.getElementById("closePasswordModal");
+    const submitEarlyAccess = document.getElementById("submitEarlyAccess");
+    const earlyAccessPassword = document.getElementById("earlyAccessPassword");
+    const passwordError = document.getElementById("passwordError");
+
+    // CHANGE THIS TO YOUR REAL PASSWORD
+    const NODE_RUNNER_PASSWORD = "block2033127";
+
+    function openPasswordModal(){
+      passwordModal.classList.add("open");
+      passwordError.textContent = "";
+      earlyAccessPassword.value = "";
+      setTimeout(() => earlyAccessPassword.focus(), 60);
+    }
+
+    function hidePasswordModal(){
+      passwordModal.classList.remove("open");
+      passwordError.textContent = "";
+      earlyAccessPassword.value = "";
+    }
+
+    function checkPassword(){
+      const entered = earlyAccessPassword.value.trim();
+
+      if (entered === NODE_RUNNER_PASSWORD) {
+        hidePasswordModal();
+        openFilm();
+      } else {
+        passwordError.textContent = "Incorrect password.";
+      }
     }
 
     document.addEventListener("click", (e) => {
-      if (e.target && e.target.id === "openTrailerBtn") openTrailer();
+      if (!e.target) return;
+
+      if (
+        e.target.id === "openEarlyAccessBtn" ||
+        e.target.id === "openCollectorAccessBtn"
+      ) {
+        openPasswordModal();
+      }
     });
-    closeTrailer.addEventListener("click", closeTrailerModal);
-    trailerModal.addEventListener("click", (e) => {
-      if (e.target === trailerModal) closeTrailerModal();
+
+    closeFilm.addEventListener("click", closeFilmModal);
+    filmModal.addEventListener("click", (e) => {
+      if (e.target === filmModal) closeFilmModal();
     });
+
+    closePasswordModal.addEventListener("click", hidePasswordModal);
+    passwordModal.addEventListener("click", (e) => {
+      if (e.target === passwordModal) hidePasswordModal();
+    });
+
+    submitEarlyAccess.addEventListener("click", checkPassword);
+
+    earlyAccessPassword.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkPassword();
+    });
+
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeTrailerModal();
+      if (e.key === "Escape") {
+        closeFilmModal();
+        hidePasswordModal();
+      }
     });
 
     const releaseDate = new Date("2026-03-21T05:00:00Z").getTime();
