@@ -650,6 +650,65 @@
       z-index: 1;
     }
 
+    .hoverPanel{
+      position:absolute;
+      inset: 14px 14px 56px 14px;
+      background:
+        radial-gradient(260px 160px at 50% 30%, rgba(242,210,138,.10), transparent 65%),
+        rgba(0,0,0,.84);
+      backdrop-filter: blur(6px);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      opacity:0;
+      transition: opacity .25s ease;
+      z-index:6;
+      padding:16px;
+      text-align:center;
+      border-radius:16px;
+      pointer-events:none;
+      border: 1px solid rgba(242,210,138,.18);
+      box-shadow: inset 0 0 0 1px rgba(242,210,138,.06);
+    }
+
+    .card:hover .hoverPanel,
+    .card:focus-within .hoverPanel{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .hoverPanelTitle{
+      font-family: Cinzel, serif;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(246,234,210,.94);
+      margin-bottom: 4px;
+      text-shadow: 0 0 10px rgba(242,210,138,.18);
+    }
+
+    .hoverPanel a{
+      font-family: Cinzel, serif;
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#f2d28a;
+      text-decoration:none;
+      border:1px solid rgba(242,210,138,.28);
+      padding:8px 10px;
+      border-radius:10px;
+      width:100%;
+      max-width:180px;
+      background:rgba(0,0,0,.35);
+    }
+
+    .hoverPanel a:hover{
+      background: rgba(242,210,138,.08);
+      border-color: rgba(242,210,138,.44);
+    }
+
     @media (max-width: 1100px){
       .statusBar{
         justify-content: flex-start;
@@ -845,13 +904,13 @@
         <div class="statusBarItem">Recovered Files: <strong>1 / 21</strong></div>
 
         <div class="statusDivider"></div>
-        <div class="statusBarItem">Current Release: <strong>Node Runner</strong></div>
+        <div class="statusBarItem">Current Release: <strong>Environmental Menace</strong></div>
 
         <div class="statusDivider"></div>
         <div class="statusBarItem">Master Artifact: <strong>Rare / Exotic Sat</strong></div>
 
         <div class="statusDivider"></div>
-        <div class="statusBarItem">Latest Transmission: <strong>Node Runner recovered</strong></div>
+        <div class="statusBarItem">Latest Transmission: <strong>Environmental Menace signal detected</strong></div>
       </div>
     </header>
 
@@ -861,49 +920,48 @@
       </div>
 
       <div class="topFeatureThumb">
-        <img src="assets/posters/NodeRunner.png" alt="Node Runner">
+        <img src="assets/evmenacegif.gif" alt="Environmental Menace">
       </div>
 
       <div class="topFeatureBody">
-        <div class="featureKicker">Archive File 01</div>
-        <h2 class="featureTitle">Node Runner</h2>
+        <div class="featureKicker">Archive File 02</div>
+        <h2 class="featureTitle">Environmental Menace</h2>
         <div class="featureDivider"></div>
 
         <p class="featureDesc">
-          A courier moves through the noise with one mission: keep Bitcoin verifiable.
+          A recovered transmission begins to surface as the world turns its machines toward a new appetite for power.
         </p>
 
         <div class="detailGrid">
           <div class="detailCard">
-            <div class="detailHead">Public Transmission</div>
-            <div class="detailText">Archive File 01 is now active for public viewing through the official terminal.</div>
+            <div class="detailHead">Upcoming Transmission</div>
+            <div class="detailText">Archive File 02 has surfaced. Public transmission details are being prepared.</div>
           </div>
           <div class="detailCard">
-            <div class="detailHead">Poster Artifacts</div>
-            <div class="detailText">20 total • 3 reserved for ABC raffle • 17 listed on OrdDropz • 21,000 sats each</div>
+            <div class="detailHead">Film Status</div>
+            <div class="detailText">Recovered signal • Preparing transmission • Coming soon</div>
           </div>
           <div class="detailCard">
-            <div class="detailHead">Master Film Artifact</div>
-            <div class="detailText">Master inscription preserved on a rare / exotic sat.</div>
+            <div class="detailHead">Artifact Status</div>
+            <div class="detailText">Poster artifact preserved on Bitcoin. Release details pending.</div>
           </div>
           <div class="detailCard">
             <div class="detailHead">Archive Status</div>
-            <div class="detailText">Recovered • Active • Public transmission now live</div>
+            <div class="detailText">File 02 • Environmental Menace • Signal pending</div>
           </div>
         </div>
 
         <div class="featureActions">
-          <button class="btn" id="openWatchNowBtn" type="button">▶ Watch Now</button>
-          <a class="btn" href="https://ordinals.com/inscription/e1dcc89dd949eb982266c0e154a0809e5e7ea81299fd13effa6cc050b14dd91ai0" target="_blank" rel="noopener noreferrer">View Inscription</a>
+          <a class="btn" href="https://ordinals.com/inscription/6c1cf51c5100cfae1496fe58ec301de25fe8e431eb22144f1ded3e49910ea00ci0" target="_blank" rel="noopener noreferrer">View Inscription</a>
           <a class="btn" href="archive.html">Archive Access</a>
-          <a class="btn" href="https://ord-dropz.xyz/marketplace/listing_1774165388635" target="_blank" rel="noopener noreferrer">Secure Artifact</a>
+          <span class="btn" style="cursor: default; opacity: .72;">Transmission Pending</span>
         </div>
       </div>
     </section>
 
-    <section class="countdownStrip" aria-label="Public transmission status">
-      <div class="countdownHeader">Transmission Status</div>
-      <div class="countdownLive" id="countdownLive" style="display:block;">Public Transmission Now Live</div>
+    <section class="countdownStrip" aria-label="Upcoming transmission status">
+      <div class="countdownHeader">Upcoming Transmission</div>
+      <div class="countdownLive" id="countdownLive" style="display:block;">Environmental Menace Signal Pending</div>
     </section>
 
     <section class="wall" id="wall"></section>
@@ -961,11 +1019,24 @@
       a.appendChild(img);
       a.appendChild(overlay);
 
+      card.appendChild(a);
+
+      if (p.title === "Node Runner") {
+        const hover = document.createElement("div");
+        hover.className = "hoverPanel";
+        hover.innerHTML = `
+          <div class="hoverPanelTitle">Node Runner Archive</div>
+          <a href="https://ordinals.com/inscription/e1dcc89dd949eb982266c0e154a0809e5e7ea81299fd13effa6cc050b14dd91ai0" target="_blank" rel="noopener noreferrer">Poster Inscription</a>
+          <a href="https://youtu.be/vM7UxJxRDJE" target="_blank" rel="noopener noreferrer">Watch Node Runner</a>
+          <a href="https://ordinals.com/inscription/9e932a1e9663400f75acde06e8ee97f94a8dd2709ff33c109be1797b5357db8ci0" target="_blank" rel="noopener noreferrer">BITCORP Terminal</a>
+        `;
+        card.appendChild(hover);
+      }
+
       const label = document.createElement("div");
       label.className = "label";
       label.textContent = p.title;
 
-      card.appendChild(a);
       card.appendChild(label);
       return card;
     }
@@ -996,7 +1067,6 @@
     introOverlay.addEventListener("click", closeIntro);
     setTimeout(closeIntro, 2600);
 
-    // Film modal
     const filmModal = document.getElementById("filmModal");
     const filmVideo = document.getElementById("filmVideo");
     const closeFilm = document.getElementById("closeFilm");
@@ -1012,7 +1082,9 @@
       filmVideo.pause();
     }
 
-    openWatchNowBtn.addEventListener("click", openFilm);
+    if (openWatchNowBtn) {
+      openWatchNowBtn.addEventListener("click", openFilm);
+    }
 
     closeFilm.addEventListener("click", closeFilmModal);
     filmModal.addEventListener("click", (e) => {
